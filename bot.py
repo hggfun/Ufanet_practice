@@ -43,9 +43,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=False)
     await update.message.reply_text("Выберите подписаться или отписаться, и введите MAC устройства:", reply_markup=reply_markup)
 
-def keyboard_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    query = update.callback_query
-    logging.info('query.data:', query.data)
 
 async def subscribe(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.message.chat_id
@@ -121,13 +118,10 @@ def make_message(mac, payload) -> str:
 
 def start_bot():
     application = ApplicationBuilder().token(consts.BOT_TOKEN).build()
-    bot = Bot(consts.BOT_TOKEN)
-    loop = asyncio.get_event_loop()
 
     application.add_handler(CommandHandler('start', start))
     application.add_handler(CommandHandler('unsubscribe', unsubscribe))
     application.add_handler(CommandHandler('subscribe', subscribe))
-    #application.add_handler(CallbackQueryHandler(keyboard_callback))
     application.add_handler(MessageHandler(filters.TEXT, get_message))
     
     application.run_polling()
